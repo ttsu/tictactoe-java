@@ -5,7 +5,6 @@ import game.TicTacToe.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GameBoard {
 
     private static final int COLS = 3;
@@ -15,6 +14,13 @@ public class GameBoard {
 
     public GameBoard() {
         board = new Player[ROWS][COLS];
+    }
+
+    public GameBoard(Player[][] board) {
+        if (board == null) {
+            throw new IllegalArgumentException("board cannot be null");
+        }
+        this.board = board;
     }
 
     public GameBoard(GameBoard other) {

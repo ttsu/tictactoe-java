@@ -1,9 +1,7 @@
 package game;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class TicTacToe implements DiscreteGameState {
     public static enum Player {
@@ -12,6 +10,7 @@ public class TicTacToe implements DiscreteGameState {
             return player == X ? O : X;
         }
     }
+
     private final GameBoard board;
     private Player currentPlayer;
     private Position lastMove;
@@ -19,6 +18,17 @@ public class TicTacToe implements DiscreteGameState {
     public TicTacToe() {
         board = new GameBoard();
         currentPlayer = Player.X;
+    }
+
+    public TicTacToe(GameBoard board, Player currentPlayer) {
+        if (board == null) {
+            throw new IllegalArgumentException("board cannot be null");
+        }
+        if (currentPlayer == null) {
+            throw new IllegalArgumentException("currentPlayer cannot be null");
+        }
+        this.board = board;
+        this.currentPlayer = currentPlayer;
     }
 
     public TicTacToe(TicTacToe other) {
