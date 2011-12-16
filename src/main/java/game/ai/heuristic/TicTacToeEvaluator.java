@@ -4,7 +4,6 @@ import static game.TicTacToe.Player.opponentOf;
 import game.TicTacToe;
 import game.TicTacToe.Player;
 
-
 public class TicTacToeEvaluator implements StateEvaluator<TicTacToe> {
 
     private final Player player;
@@ -22,7 +21,7 @@ public class TicTacToeEvaluator implements StateEvaluator<TicTacToe> {
             throw new IllegalArgumentException("cannot evaluate null game");
         }
         if (game.hasWin(player)) {
-            return 100;
+            return game.availableStates().size() + 1;
         } else if (game.hasWin(opponentOf(player))) {
             return -1;
         } else {
