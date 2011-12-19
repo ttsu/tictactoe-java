@@ -11,6 +11,12 @@ public final class Position {
     private final int row;
     private final int col;
 
+    /**
+     * Creates a position at the given row and column.
+     * 
+     * @param row
+     * @param col
+     */
     public Position(int row, int col) {
         this.row = row;
         this.col = col;

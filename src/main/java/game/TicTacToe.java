@@ -3,6 +3,13 @@ package game;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A {@link DiscreteGameState} representing the current state of a TicTacToe
+ * game.
+ * 
+ * @author Tim Tsu
+ * 
+ */
 public class TicTacToe implements DiscreteGameState {
     public static enum Player {
         O, X;
@@ -15,11 +22,23 @@ public class TicTacToe implements DiscreteGameState {
     private Player currentPlayer;
     private Position lastMove;
 
+    /**
+     * Creates the initial state of a new TicTacToe game.
+     */
     public TicTacToe() {
         board = new GameBoard();
         currentPlayer = Player.X;
     }
 
+    /**
+     * Creates a new instance of a TicTacToe game state with a given board
+     * layout and current player.
+     * 
+     * @param board
+     *            the current board state
+     * @param currentPlayer
+     *            the current player whose turn it is to make the next move
+     */
     public TicTacToe(GameBoard board, Player currentPlayer) {
         if (board == null) {
             throw new IllegalArgumentException("board cannot be null");
@@ -31,6 +50,12 @@ public class TicTacToe implements DiscreteGameState {
         this.currentPlayer = currentPlayer;
     }
 
+    /**
+     * Creates a deep copy of the given TicTacToe game state.
+     * 
+     * @param other
+     *            the TicTacToe game state to copy
+     */
     public TicTacToe(TicTacToe other) {
         this.board = new GameBoard(other.board);
         this.currentPlayer = other.getCurrentPlayer();
@@ -49,14 +74,33 @@ public class TicTacToe implements DiscreteGameState {
         return availableStates;
     }
 
+    /**
+     * Gets the current player whose turn it is to make the next move.
+     * 
+     * @return the {@link Player} who gets to make the next move
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * Gets the last position that was played on the TicTacToe board.
+     * 
+     * @return a {@link Position} on the TicTacToe board, or null if no moves
+     *         were taken yet.
+     */
     public Position getLastMove() {
         return lastMove;
     }
 
+    /**
+     * Returns whether the given player has a winning position on the TicTacToe
+     * board.
+     * 
+     * @param player
+     *            the player to check for a win
+     * @return <code>true</code> if player has won; <code>false</code> otherwise
+     */
     public boolean hasWin(Player player) {
         for (int i = 0; i < 3; i++) {
             if (completesRow(player, i) || completesColumn(player, i)) {
@@ -71,6 +115,17 @@ public class TicTacToe implements DiscreteGameState {
         return hasWin(Player.O) || hasWin(Player.X) || board.getOpenPositions().isEmpty();
     }
 
+    /**
+     * Play a move in the given row and column of the TicTacToe board with the
+     * current player.
+     * 
+     * @param row
+     *            the row to mark
+     * @param col
+     *            the column to mark
+     * @return <code>true</code> if this position was playable;
+     *         <code>false</code> otherwise
+     */
     public boolean play(int row, int col) {
         if (board.mark(row, col, currentPlayer)) {
             lastMove = new Position(row, col);
@@ -84,6 +139,9 @@ public class TicTacToe implements DiscreteGameState {
         System.out.println(board);
     }
 
+    /**
+     * Switches the current player.
+     */
     public void switchPlayer() {
         currentPlayer = Player.opponentOf(currentPlayer);
     }
