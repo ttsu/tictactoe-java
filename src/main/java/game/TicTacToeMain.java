@@ -2,11 +2,10 @@ package game;
 
 import game.TicTacToe.Player;
 import game.ai.GameIntelligenceAgent;
-import game.ai.MinimaxEvaluation;
+import game.ai.MinimaxAgent;
 import game.ai.heuristic.TicTacToeEvaluator;
 
 import java.util.Scanner;
-
 
 public class TicTacToeMain {
 
@@ -16,6 +15,7 @@ public class TicTacToeMain {
     public static void main(String[] args) {
         TicTacToe game = new TicTacToe();
         TicTacToeEvaluator eval = new TicTacToeEvaluator(Player.O);
+        GameIntelligenceAgent<TicTacToe> agent = new MinimaxAgent<TicTacToe>(eval);
         Scanner scanner = new Scanner(System.in);
         while (!game.isOver()) {
             System.out.println("Player " + game.getCurrentPlayer() + ":");
@@ -29,8 +29,7 @@ public class TicTacToeMain {
             game.switchPlayer();
 
             if (!game.isOver()) {
-                GameIntelligenceAgent<TicTacToe> ai = new MinimaxEvaluation<TicTacToe>(eval, game);
-                TicTacToe nextState = ai.getNextGameState();
+                TicTacToe nextState = agent.evaluateNextState(game);
                 // check for not null
                 Position lastMove = nextState.getLastMove();
                 game.play(lastMove.getRow(), lastMove.getCol());

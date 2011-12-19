@@ -12,6 +12,7 @@ import game.TicTacToe.Player;
 import game.ai.heuristic.TicTacToeEvaluator;
 
 import org.fest.util.Collections;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -20,7 +21,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TicTacToeMinimaxEvaluationTest {
+public class TicTacToeMinimaxAgentTest {
+
+    private MinimaxAgent<TicTacToe> agent;
 
     @Mock
     private TicTacToeEvaluator evaluator;
@@ -31,17 +34,22 @@ public class TicTacToeMinimaxEvaluationTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
+    @Before
+    public void setup() {
+        agent = new MinimaxAgent<TicTacToe>(evaluator);
+    }
+
     @Test
     public void evaluateLeaf() {
-        MinimaxEvaluation<TicTacToe> evaluation = new MinimaxEvaluation<TicTacToe>(evaluator, gameState, 0);
-        assertThat(evaluation.getNextGameState()).isNull();
+        MinimaxAgent<TicTacToe> minimaxEval = new MinimaxAgent<TicTacToe>(evaluator);
+        assertThat(minimaxEval.evaluateNextState(gameState, 0)).isNull();
     }
 
     @Test
     public void evaluateNegativeDepth() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("depth cannot be less than zero. depth=-1");
-        new MinimaxEvaluation<TicTacToe>(evaluator, gameState, -1);
+        agent.evaluateNextState(gameState, -1);
     }
 
     // choose winning move
@@ -55,7 +63,7 @@ public class TicTacToeMinimaxEvaluationTest {
         when(evaluator.evaluate(drawState)).thenReturn(0);
         when(gameState.availableStates()).thenReturn(Collections.<DiscreteGameState> list(winState, drawState));
 
-        TicTacToe actualState = new MinimaxEvaluation<TicTacToe>(evaluator, gameState).getNextGameState();
+        TicTacToe actualState = agent.evaluateNextState(gameState);
         assertThat(actualState).isSameAs(winState);
     }
 
@@ -70,16 +78,18 @@ public class TicTacToeMinimaxEvaluationTest {
         when(evaluator.evaluate(drawState)).thenReturn(0);
         when(gameState.availableStates()).thenReturn(Collections.<DiscreteGameState> list(loseState, drawState));
 
-        TicTacToe actualState = new MinimaxEvaluation<TicTacToe>(evaluator, gameState).getNextGameState();
+        TicTacToe actualState = agent.evaluateNextState(gameState);
         assertThat(actualState).isSameAs(drawState);
     }
 
     @Test
     public void preferEarlyWin() {
-        TicTacToe gameState = new TicTacToe(new GameBoard(new Player[][] { { O, null, null }, { O, X, X },
+        TicTacToe gameState = new TicTacToe(new GameBoard(new Player[][] { 
+                { O, null, null }, 
+                { O, X, X },
                 { null, null, X } }), O);
-        TicTacToe actualState = new MinimaxEvaluation<TicTacToe>(new TicTacToeEvaluator(O), gameState)
-                .getNextGameState();
+        MinimaxAgent<TicTacToe> agent = new MinimaxAgent<TicTacToe>(new TicTacToeEvaluator(O));
+        TicTacToe actualState = agent.evaluateNextState(gameState);
         assertThat(actualState.hasWin(O)).isTrue();
     }
 
@@ -87,8 +97,7 @@ public class TicTacToeMinimaxEvaluationTest {
     @Test
     public void evaluateGameAlreadyOver() {
         when(gameState.isOver()).thenReturn(true);
-        MinimaxEvaluation<TicTacToe> evaluation = new MinimaxEvaluation<TicTacToe>(evaluator, gameState);
-        assertThat(evaluation.getNextGameState()).isNull();
+        assertThat(agent.evaluateNextState(gameState)).isNull();
     }
 
 }

@@ -8,13 +8,15 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * not thread-safe
+ * Implementation of {@link GameIntelligenceAgent} that evaluates the next
+ * optimal game state using the minimax algorithm, with a-b pruning.
  * 
  * @author Tim Tsu
  * 
  * @param <T>
+ *            the type of {@link DiscreteGameState} to evaluate
  */
-public class MinimaxEvaluation<T extends DiscreteGameState> implements GameIntelligenceAgent<T> {
+public class MinimaxAgent<T extends DiscreteGameState> implements GameIntelligenceAgent<T> {
 
     private static class Node<S extends DiscreteGameState> {
         private S state;
@@ -31,30 +33,36 @@ public class MinimaxEvaluation<T extends DiscreteGameState> implements GameIntel
     }
 
     private final StateEvaluator<T> evaluator;
-    private final Node<T> root;
 
-    //TODO: consider static factory method for evaluation
-    
-    public MinimaxEvaluation(StateEvaluator<T> evaluator, T initialState) {
-        this(evaluator, initialState, Integer.MAX_VALUE);
-    }
-
-    public MinimaxEvaluation(StateEvaluator<T> evaluator, T initialState, int depth) {
-    	if (evaluator == null) {
-    		throw new IllegalArgumentException("evaluator cannot be null");
-    	}
-    	if (initialState == null) {
-    		throw new IllegalArgumentException("initialState cannot be null");
-    	}
-    	if (depth < 0) {
-    		throw new IllegalArgumentException("depth cannot be less than zero. depth=" + depth);
-    	}
+    /**
+     * Creates a new instance of {@link MinimaxAgent} that uses the given
+     * {@link StateEvaluator} for measuring the value of each game state.
+     * 
+     * @param evaluator
+     *            the {@link StateEvaluator} used to measure the value of each
+     *            game state; cannot be null
+     */
+    public MinimaxAgent(StateEvaluator<T> evaluator) {
+        if (evaluator == null) {
+            throw new IllegalArgumentException("evaluator cannot be null");
+        }
         this.evaluator = evaluator;
-        this.root = buildTree(initialState, depth);
     }
 
     @Override
-	public T getNextGameState() {
+    public T evaluateNextState(T currentState) {
+        return evaluateNextState(currentState, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public T evaluateNextState(T currentState, int depth) {
+        if (currentState == null) {
+            throw new IllegalArgumentException("initialState cannot be null");
+        }
+        if (depth < 0) {
+            throw new IllegalArgumentException("depth cannot be less than zero. depth=" + depth);
+        }
+        Node<T> root = buildTree(currentState, depth);
         for (Node<T> child : root.children) {
             if (child.value == root.value) {
                 return child.state;
