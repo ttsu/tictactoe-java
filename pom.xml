@@ -41,7 +41,7 @@
                <configuration>
                 <archive>
                     <manifest>
-                        <mainClass>game.TicTacToeMain</mainClass>
+                        <mainClass>ttsu.game.tictactoe.TicTacToeMain</mainClass>
                     </manifest>
                 </archive>
                </configuration>

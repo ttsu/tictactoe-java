@@ -1,7 +1,11 @@
-package game;
+package ttsu.game.tictactoe;
+
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ttsu.game.DiscreteGameState;
+import ttsu.game.Position;
 
 /**
  * A {@link DiscreteGameState} representing the current state of a TicTacToe
@@ -10,7 +14,7 @@ import java.util.List;
  * @author Tim Tsu
  * 
  */
-public class TicTacToe implements DiscreteGameState {
+public class TicTacToeGameState implements DiscreteGameState {
     public static enum Player {
         O, X;
         public static Player opponentOf(Player player) {
@@ -25,7 +29,7 @@ public class TicTacToe implements DiscreteGameState {
     /**
      * Creates the initial state of a new TicTacToe game.
      */
-    public TicTacToe() {
+    public TicTacToeGameState() {
         board = new GameBoard();
         currentPlayer = Player.X;
     }
@@ -39,7 +43,7 @@ public class TicTacToe implements DiscreteGameState {
      * @param currentPlayer
      *            the current player whose turn it is to make the next move
      */
-    public TicTacToe(GameBoard board, Player currentPlayer) {
+    public TicTacToeGameState(GameBoard board, Player currentPlayer) {
         if (board == null) {
             throw new IllegalArgumentException("board cannot be null");
         }
@@ -56,7 +60,7 @@ public class TicTacToe implements DiscreteGameState {
      * @param other
      *            the TicTacToe game state to copy
      */
-    public TicTacToe(TicTacToe other) {
+    public TicTacToeGameState(TicTacToeGameState other) {
         this.board = new GameBoard(other.board);
         this.currentPlayer = other.getCurrentPlayer();
     }
@@ -66,7 +70,7 @@ public class TicTacToe implements DiscreteGameState {
         List<Position> availableMoves = board.getOpenPositions();
         List<DiscreteGameState> availableStates = new ArrayList<DiscreteGameState>(availableMoves.size());
         for (Position move : availableMoves) {
-            TicTacToe newState = new TicTacToe(this);
+            TicTacToeGameState newState = new TicTacToeGameState(this);
             newState.play(move.getRow(), move.getCol());
             newState.switchPlayer();
             availableStates.add(newState);

@@ -1,10 +1,7 @@
-package game.ai.heuristic;
+package ttsu.game.ai.heuristic.tictactoe;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import game.TicTacToe;
-import game.TicTacToe.Player;
-import game.ai.heuristic.TicTacToeEvaluator;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,13 +11,17 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import ttsu.game.ai.heuristic.tictactoe.TicTacToeEvaluator;
+import ttsu.game.tictactoe.TicTacToeGameState;
+import ttsu.game.tictactoe.TicTacToeGameState.Player;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class TicTacToeEvaluatorTest {
 
     private TicTacToeEvaluator evaluator;
     @Mock
-    private TicTacToe game;
+    private TicTacToeGameState game;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

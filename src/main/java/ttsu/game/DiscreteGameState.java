@@ -1,4 +1,4 @@
-package game;
+package ttsu.game;
 
 import java.util.List;
 

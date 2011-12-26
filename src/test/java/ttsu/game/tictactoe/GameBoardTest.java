@@ -1,14 +1,15 @@
-package game;
+package ttsu.game.tictactoe;
 
 import static org.fest.assertions.Assertions.assertThat;
-import game.GameBoard;
-import game.Position;
-import game.TicTacToe.Player;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import ttsu.game.Position;
+import ttsu.game.tictactoe.GameBoard;
+import ttsu.game.tictactoe.TicTacToeGameState.Player;
 
 
 public class GameBoardTest {

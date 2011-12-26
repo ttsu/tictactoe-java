@@ -1,6 +1,6 @@
-package game.ai.heuristic;
+package ttsu.game.ai.heuristic;
 
-import game.DiscreteGameState;
+import ttsu.game.DiscreteGameState;
 
 /**
  * An evaluator that examines a {@link DiscreteGameState} and calculates a

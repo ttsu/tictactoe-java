@@ -1,11 +1,12 @@
-package game.ai.heuristic;
+package ttsu.game.ai.heuristic.tictactoe;
 
-import static game.TicTacToe.Player.opponentOf;
-import game.TicTacToe;
-import game.TicTacToe.Player;
+import static ttsu.game.tictactoe.TicTacToeGameState.Player.opponentOf;
+import ttsu.game.ai.heuristic.StateEvaluator;
+import ttsu.game.tictactoe.TicTacToeGameState;
+import ttsu.game.tictactoe.TicTacToeGameState.Player;
 
 /**
- * A {@link StateEvaluator} for a {@link TicTacToe} game state, relative to a
+ * A {@link StateEvaluator} for a {@link TicTacToeGameState} game state, relative to a
  * particular player.
  * <p>
  * The score is calculated such that a winning state always has a higher score
@@ -17,7 +18,7 @@ import game.TicTacToe.Player;
  * @author Tim Tsu
  * 
  */
-public class TicTacToeEvaluator implements StateEvaluator<TicTacToe> {
+public class TicTacToeEvaluator implements StateEvaluator<TicTacToeGameState> {
 
     private final Player player;
 
@@ -36,7 +37,7 @@ public class TicTacToeEvaluator implements StateEvaluator<TicTacToe> {
     }
 
     @Override
-    public int evaluate(TicTacToe game) {
+    public int evaluate(TicTacToeGameState game) {
         if (game == null) {
             throw new IllegalArgumentException("cannot evaluate null game");
         }

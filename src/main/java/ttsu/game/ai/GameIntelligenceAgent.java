@@ -1,6 +1,6 @@
-package game.ai;
+package ttsu.game.ai;
 
-import game.DiscreteGameState;
+import ttsu.game.DiscreteGameState;
 
 /**
  * A game agent for discrete game states that evaluates the next game state from

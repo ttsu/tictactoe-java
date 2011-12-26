@@ -1,11 +1,12 @@
-package game.ai;
+package ttsu.game.ai;
 
-import game.DiscreteGameState;
-import game.ai.heuristic.StateEvaluator;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import ttsu.game.DiscreteGameState;
+import ttsu.game.ai.heuristic.StateEvaluator;
 
 /**
  * Implementation of {@link GameIntelligenceAgent} that evaluates the next

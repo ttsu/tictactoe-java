@@ -1,10 +1,7 @@
-package game;
+package ttsu.game.tictactoe;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import game.Position;
-import game.TicTacToe;
-import game.TicTacToe.Player;
 
 import java.util.List;
 
@@ -13,24 +10,29 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import ttsu.game.DiscreteGameState;
+import ttsu.game.Position;
+import ttsu.game.tictactoe.TicTacToeGameState;
+import ttsu.game.tictactoe.TicTacToeGameState.Player;
 
-public class TicTacToeTest {
 
-    private TicTacToe game;
+public class TicTacToeGameStateTest {
+
+    private TicTacToeGameState game;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
-        game = new TicTacToe();
+        game = new TicTacToeGameState();
     }
 
     // -- constructor
 
     @Test
     public void startingPlayerIsX() {
-        assertThat(new TicTacToe().getCurrentPlayer()).isEqualTo(Player.X);
+        assertThat(new TicTacToeGameState().getCurrentPlayer()).isEqualTo(Player.X);
     }
 
     // TODO copy c'tor
@@ -39,14 +41,14 @@ public class TicTacToeTest {
     
     @Test
     public void getAvaliableStatesEmptyBoard() {
-    	TicTacToe game = new TicTacToe();
+    	TicTacToeGameState game = new TicTacToeGameState();
     	List<DiscreteGameState> states = game.availableStates();
         assertThat(states).hasSize(9);
     }
 
     @Test
     public void getAvailableStatesLastOne() {
-        TicTacToe game = new TicTacToe();
+        TicTacToeGameState game = new TicTacToeGameState();
         game.play(0, 0);
         game.play(0, 1);
         game.play(0, 2);
@@ -58,14 +60,14 @@ public class TicTacToeTest {
 
         List<DiscreteGameState> states = game.availableStates();
         assertThat(states).hasSize(1);
-        TicTacToe availableState = (TicTacToe) states.get(0);
+        TicTacToeGameState availableState = (TicTacToeGameState) states.get(0);
         assertThat(availableState.getCurrentPlayer()).isEqualTo(Player.opponentOf(game.getCurrentPlayer()));
         assertThat(availableState.getLastMove()).isEqualTo(new Position(2, 2));
     }
 
     @Test
     public void getAvailableStatesCompleteBoard() {
-        TicTacToe game = new TicTacToe();
+        TicTacToeGameState game = new TicTacToeGameState();
         game.play(0, 0);
         game.play(0, 1);
         game.play(0, 2);

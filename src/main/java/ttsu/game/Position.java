@@ -1,8 +1,8 @@
-package game;
+package ttsu.game;
 
 /**
- * A position on a tic tac toe board. Positions are represented as a row and
- * column beginning at the top left corner.
+ * A position on a 2D game board. Positions are represented as a row and column
+ * beginning at the top left corner.
  * 
  * @author Tim Tsu
  * 

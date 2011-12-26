@@ -1,9 +1,10 @@
-package game;
-
-import game.TicTacToe.Player;
+package ttsu.game.tictactoe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ttsu.game.Position;
+import ttsu.game.tictactoe.TicTacToeGameState.Player;
 
 /**
  * Represents a TicTacToe game board.

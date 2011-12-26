@@ -1,15 +1,10 @@
-package game.ai;
+package ttsu.game.ai.tictactoe;
 
-import static game.TicTacToe.Player.O;
-import static game.TicTacToe.Player.X;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import game.DiscreteGameState;
-import game.GameBoard;
-import game.TicTacToe;
-import game.TicTacToe.Player;
-import game.ai.heuristic.TicTacToeEvaluator;
+import static ttsu.game.tictactoe.TicTacToeGameState.Player.O;
+import static ttsu.game.tictactoe.TicTacToeGameState.Player.X;
 
 import org.fest.util.Collections;
 import org.junit.Before;
@@ -20,28 +15,35 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import ttsu.game.DiscreteGameState;
+import ttsu.game.ai.MinimaxAgent;
+import ttsu.game.ai.heuristic.tictactoe.TicTacToeEvaluator;
+import ttsu.game.tictactoe.GameBoard;
+import ttsu.game.tictactoe.TicTacToeGameState;
+import ttsu.game.tictactoe.TicTacToeGameState.Player;
+
 @RunWith(MockitoJUnitRunner.class)
 public class TicTacToeMinimaxAgentTest {
 
-    private MinimaxAgent<TicTacToe> agent;
+    private MinimaxAgent<TicTacToeGameState> agent;
 
     @Mock
     private TicTacToeEvaluator evaluator;
 
     @Mock
-    private TicTacToe gameState;
+    private TicTacToeGameState gameState;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
-        agent = new MinimaxAgent<TicTacToe>(evaluator);
+        agent = new MinimaxAgent<TicTacToeGameState>(evaluator);
     }
 
     @Test
     public void evaluateLeaf() {
-        MinimaxAgent<TicTacToe> minimaxEval = new MinimaxAgent<TicTacToe>(evaluator);
+        MinimaxAgent<TicTacToeGameState> minimaxEval = new MinimaxAgent<TicTacToeGameState>(evaluator);
         assertThat(minimaxEval.evaluateNextState(gameState, 0)).isNull();
     }
 
@@ -55,41 +57,41 @@ public class TicTacToeMinimaxAgentTest {
     // choose winning move
     @Test
     public void preferWinningState() {
-        TicTacToe winState = mock(TicTacToe.class);
-        TicTacToe drawState = mock(TicTacToe.class);
+        TicTacToeGameState winState = mock(TicTacToeGameState.class);
+        TicTacToeGameState drawState = mock(TicTacToeGameState.class);
         when(winState.isOver()).thenReturn(true);
         when(drawState.isOver()).thenReturn(true);
         when(evaluator.evaluate(winState)).thenReturn(100);
         when(evaluator.evaluate(drawState)).thenReturn(0);
         when(gameState.availableStates()).thenReturn(Collections.<DiscreteGameState> list(winState, drawState));
 
-        TicTacToe actualState = agent.evaluateNextState(gameState);
+        TicTacToeGameState actualState = agent.evaluateNextState(gameState);
         assertThat(actualState).isSameAs(winState);
     }
 
     // prevent loss. this is essentially the same as above...
     @Test
     public void preventLosingMove() {
-        TicTacToe loseState = mock(TicTacToe.class);
-        TicTacToe drawState = mock(TicTacToe.class);
+        TicTacToeGameState loseState = mock(TicTacToeGameState.class);
+        TicTacToeGameState drawState = mock(TicTacToeGameState.class);
         when(loseState.isOver()).thenReturn(true);
         when(drawState.isOver()).thenReturn(true);
         when(evaluator.evaluate(loseState)).thenReturn(-1);
         when(evaluator.evaluate(drawState)).thenReturn(0);
         when(gameState.availableStates()).thenReturn(Collections.<DiscreteGameState> list(loseState, drawState));
 
-        TicTacToe actualState = agent.evaluateNextState(gameState);
+        TicTacToeGameState actualState = agent.evaluateNextState(gameState);
         assertThat(actualState).isSameAs(drawState);
     }
 
     @Test
     public void preferEarlyWin() {
-        TicTacToe gameState = new TicTacToe(new GameBoard(new Player[][] { 
+        TicTacToeGameState gameState = new TicTacToeGameState(new GameBoard(new Player[][] { 
                 { O, null, null }, 
                 { O, X, X },
                 { null, null, X } }), O);
-        MinimaxAgent<TicTacToe> agent = new MinimaxAgent<TicTacToe>(new TicTacToeEvaluator(O));
-        TicTacToe actualState = agent.evaluateNextState(gameState);
+        MinimaxAgent<TicTacToeGameState> agent = new MinimaxAgent<TicTacToeGameState>(new TicTacToeEvaluator(O));
+        TicTacToeGameState actualState = agent.evaluateNextState(gameState);
         assertThat(actualState.hasWin(O)).isTrue();
     }
 
