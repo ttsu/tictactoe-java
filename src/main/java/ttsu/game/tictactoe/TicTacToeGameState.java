@@ -1,6 +1,5 @@
 package ttsu.game.tictactoe;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,8 +138,8 @@ public class TicTacToeGameState implements DiscreteGameState {
 
     }
 
-    public void print() {
-        System.out.println(board);
+    public GameBoard getGameBoard() {
+        return board;
     }
 
     /**

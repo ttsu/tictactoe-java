@@ -23,13 +23,13 @@ public class TicTacToeMain {
         Scanner scanner = new Scanner(System.in);
 
         while (!game.isOver()) {
-            game.print();
+            printGameBoard(game);
             userPlay(scanner, game);
             game.switchPlayer();
             computerPlay(agent, game);
             game.switchPlayer();
         }
-        game.print();
+        printGameBoard(game);
         printGameOver(game);
     }
 
@@ -63,6 +63,7 @@ public class TicTacToeMain {
         Position userPosition;
         while (true) {
             do {
+                System.out.print("Player X [row,col]: ");
                 String input = scanner.nextLine();
                 userPosition = parseUserInput(input);
             } while (userPosition == null);
@@ -92,7 +93,22 @@ public class TicTacToeMain {
     }
 
     private static void printInstructions() {
-        System.out.println("Enter '<row>,<col>' to play a position:");
+        System.out.println("Enter '<row>,<col>' to play a position. For example, '0,2'.");
+    }
+
+    private static void printGameBoard(TicTacToeGameState game) {
+        GameBoard board = game.getGameBoard();
+        System.out.printf("%s|%s|%s\n", markToString(board.getMark(0, 0)), markToString(board.getMark(0, 1)),
+                markToString(board.getMark(0, 2)));
+        for (int row = 1; row < 3; row++) {
+            System.out.println("-+-+-");
+            System.out.printf("%s|%s|%s\n", markToString(board.getMark(row, 0)), markToString(board.getMark(row, 1)),
+                    markToString(board.getMark(row, 2)));
+        }
+    }
+
+    private static String markToString(Player player) {
+        return player == null ? " " : player.toString();
     }
 
 }
