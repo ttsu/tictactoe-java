@@ -7,5 +7,5 @@ by Tim Tsu
 * Maven 2
 
 ### Build and Run ###
-    mvn jar:jar
+    mvn package
     java -jar target/tictactoe-1.0.jar

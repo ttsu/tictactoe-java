@@ -1,6 +1,7 @@
 package ttsu.game.tictactoe;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ttsu.game.Position;
@@ -129,6 +130,33 @@ public class GameBoard {
             sb.append('\n');
         }
         return sb.toString();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof GameBoard)) {
+            return false;
+        }
+        GameBoard other = (GameBoard) obj;
+        for (int row = 0; row < ROWS; row++) {
+            if (!Arrays.equals(board[row], other.board[row])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        for (int row = 0; row < ROWS; row++) {
+            result = prime * result + Arrays.hashCode(board[row]);
+        }
+        return result;
     }
 
     private static void validatePosition(int row, int col) {

@@ -62,6 +62,7 @@ public class TicTacToeGameState implements DiscreteGameState {
     public TicTacToeGameState(TicTacToeGameState other) {
         this.board = new GameBoard(other.board);
         this.currentPlayer = other.getCurrentPlayer();
+        this.lastMove = other.lastMove;
     }
 
     @Override
@@ -138,6 +139,11 @@ public class TicTacToeGameState implements DiscreteGameState {
 
     }
 
+    /**
+     * Gets the game board.
+     * 
+     * @return {@link GameBoard} for the current TicTacToe game; cannot be null
+     */
     public GameBoard getGameBoard() {
         return board;
     }

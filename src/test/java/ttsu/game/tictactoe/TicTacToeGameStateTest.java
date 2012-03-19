@@ -2,7 +2,6 @@ package ttsu.game.tictactoe;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-
 import java.util.List;
 
 import org.junit.Before;
@@ -12,7 +11,6 @@ import org.junit.rules.ExpectedException;
 
 import ttsu.game.DiscreteGameState;
 import ttsu.game.Position;
-import ttsu.game.tictactoe.TicTacToeGameState;
 import ttsu.game.tictactoe.TicTacToeGameState.Player;
 
 
@@ -35,7 +33,14 @@ public class TicTacToeGameStateTest {
         assertThat(new TicTacToeGameState().getCurrentPlayer()).isEqualTo(Player.X);
     }
 
-    // TODO copy c'tor
+    @Test
+    public void copyConstructorDeepCopiesBoard() {
+        game.play(0, 0);
+        TicTacToeGameState copy = new TicTacToeGameState(game);
+        assertThat(copy.getGameBoard()).isEqualTo(game.getGameBoard()).isNotSameAs(game.getGameBoard());
+        assertThat(copy.getLastMove()).isEqualTo(game.getLastMove());
+        assertThat(copy.getCurrentPlayer()).isEqualTo(game.getCurrentPlayer());
+    }
 
     // -- availableStates
     
