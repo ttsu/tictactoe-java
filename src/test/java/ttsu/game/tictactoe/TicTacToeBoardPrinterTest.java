@@ -17,43 +17,40 @@ import ttsu.game.tictactoe.TicTacToeGameState.Player;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TicTacToeBoardPrinterTest {
-    private TicTacToeBoardPrinter printer;
-    @Mock
-    private PrintStream printStream;
-    
-    @Before
-    public void setup() {
-        printer = new TicTacToeBoardPrinter(printStream);
-    }
-    
-    @Test
-    public void printGameBoardEmpty() {
-        GameBoard board = new GameBoard();
-        
-        printer.printGameBoard(board);
-        
-        InOrder inOrder = inOrder(printStream);
-        inOrder.verify(printStream).printf("%s|%s|%s\n", " ", " ", " ");
-        inOrder.verify(printStream).println("-+-+-");
-        inOrder.verify(printStream).printf("%s|%s|%s\n", " ", " ", " ");
-        inOrder.verify(printStream).println("-+-+-");
-        inOrder.verify(printStream).printf("%s|%s|%s\n", " ", " ", " ");
-    }
-    
-    @Test
-    public void printGameBoard() {
-        GameBoard board = new GameBoard(new Player[][] {
-                { O, X,    O},
-                { X, null, O},
-                { X, O,    X}} );
-        
-        printer.printGameBoard(board);
-        
-        InOrder inOrder = inOrder(printStream);
-        inOrder.verify(printStream).printf("%s|%s|%s\n", "O", "X", "O");
-        inOrder.verify(printStream).println("-+-+-");
-        inOrder.verify(printStream).printf("%s|%s|%s\n", "X", " ", "O");
-        inOrder.verify(printStream).println("-+-+-");
-        inOrder.verify(printStream).printf("%s|%s|%s\n", "X", "O", "X");
-    }
+  private TicTacToeBoardPrinter printer;
+  @Mock
+  private PrintStream printStream;
+
+  @Before
+  public void setup() {
+    printer = new TicTacToeBoardPrinter(printStream);
+  }
+
+  @Test
+  public void printGameBoardEmpty() {
+    GameBoard board = new GameBoard();
+
+    printer.printGameBoard(board);
+
+    InOrder inOrder = inOrder(printStream);
+    inOrder.verify(printStream).printf("%s|%s|%s\n", " ", " ", " ");
+    inOrder.verify(printStream).println("-+-+-");
+    inOrder.verify(printStream).printf("%s|%s|%s\n", " ", " ", " ");
+    inOrder.verify(printStream).println("-+-+-");
+    inOrder.verify(printStream).printf("%s|%s|%s\n", " ", " ", " ");
+  }
+
+  @Test
+  public void printGameBoard() {
+    GameBoard board = new GameBoard(new Player[][] { {O, X, O}, {X, null, O}, {X, O, X}});
+
+    printer.printGameBoard(board);
+
+    InOrder inOrder = inOrder(printStream);
+    inOrder.verify(printStream).printf("%s|%s|%s\n", "O", "X", "O");
+    inOrder.verify(printStream).println("-+-+-");
+    inOrder.verify(printStream).printf("%s|%s|%s\n", "X", " ", "O");
+    inOrder.verify(printStream).println("-+-+-");
+    inOrder.verify(printStream).printf("%s|%s|%s\n", "X", "O", "X");
+  }
 }
