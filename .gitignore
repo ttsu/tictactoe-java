@@ -1,6 +1,14 @@
+# Eclipse
 .metadata
 .settings
 .classpath
 .project
 bin
+
+# Maven
 target
+
+# Gradle
+build
+.gradle
+.gradletasknamecache
