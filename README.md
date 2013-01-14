@@ -7,9 +7,9 @@ by Tim Tsu
 * Maven 2 or Gradle
 
 ### Build and Run ###
-* Maven
+#### Maven ####
     mvn package
     java -jar target/tictactoe-1.0.jar
-* Gradle
+#### Gradle ####
     gradle installApp
     ./build/install/tictactoe-java/bin/tictactoe-java
