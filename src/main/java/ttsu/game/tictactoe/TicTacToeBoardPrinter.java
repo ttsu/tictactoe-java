@@ -27,6 +27,8 @@ public class TicTacToeBoardPrinter {
             printRow(i, board);
             printStream.println(str.toString());
         }
+
+        printStream.println("\n");
     }
 
     private void printRow(int row, GameBoard board) {

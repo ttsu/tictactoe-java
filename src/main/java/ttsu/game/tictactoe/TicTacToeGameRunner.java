@@ -1,7 +1,7 @@
 package ttsu.game.tictactoe;
 
-import java.awt.*;
 import java.io.PrintStream;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -35,16 +35,14 @@ public class TicTacToeGameRunner {
         this.printStream = printStream;
     }
 
-    /**
-     * Runs the TicTacToe game, alternating between human and computer moves until the game is over.
-     */
     public void run() {
         printStream.println("Game has started");
 
         while (!game.isOver()) {
-            moveRandomlyComputer();
+//            moveRandomlyComputer();
             moveRandomlyComputer();
 //            moveComputer();
+            moveComputer();
             boardPrinter.printGameBoard(game.getGameBoard());
         }
         printGameOver();
@@ -60,22 +58,29 @@ public class TicTacToeGameRunner {
             return;
         }
         Block nextMove = nextState.getLastMove();
-        game.play(nextMove.a, nextMove.b);
+        game.play(nextMove);
         game.switchPlayer();
     }
 
     void moveRandomlyComputer() {
         Block userBlock;
         while (true) {
-            userBlock = this.getRandomBlock();
+
+            if (this.getRandomBlock() != null) {
+                userBlock = this.getRandomBlock();
+            } else {
+                return;
+            }
+
             try {
-                if (game.play(userBlock.a, userBlock.b)) {
+                if (game.play(userBlock)) {
                     game.switchPlayer();
                     return;
                 } else {
-                    if(game.getGameBoard().getOpenPositions().isEmpty()) {
+                    if (game.getGameBoard().getOpenPositions().isEmpty()) {
                         return;
                     }
+
                     printStream.printf("(%d,%d,%d,%d) has already been taken. ", userBlock.a.x,
                             userBlock.a.y, userBlock.b.x, userBlock.b.y);
 
@@ -93,7 +98,7 @@ public class TicTacToeGameRunner {
 
     private void printGameOver() {
         if (game.hasWin(Player.X)) {
-            ((PrintStream) printStream).println("Player X won.");
+            printStream.println("Player X won.");
         } else if (game.hasWin(Player.O)) {
             printStream.println("Player O won.");
         } else {
@@ -107,18 +112,18 @@ public class TicTacToeGameRunner {
 
     private Block getRandomBlock() {
         Random random = new Random();
-        Point start, end;
-        boolean direction;
+        List<Block> openPositions = game.getGameBoard().getOpenPositions();
+        int size = openPositions.size();
 
-        start = new Point(random.nextInt(Main.X - 1), random.nextInt(Main.Y - 1));
-        direction = random.nextBoolean();
-
-        if (direction) {
-            end = new Point(start.x + 1, start.y);
-        } else {
-            end = new Point(start.x, start.y + 1);
+        if (size == 0) {
+            return null;
         }
-        return new Block(start, end);
+
+        if (size == 1) {
+            return openPositions.get(0);
+        }
+
+        return openPositions.get(random.nextInt(size - 1));
     }
 
 }

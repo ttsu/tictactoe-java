@@ -29,11 +29,6 @@ public class GameBoard {
         return COLS;
     }
 
-    /**
-     * Create a game board from an array.
-     *
-     * @param board the {@link Player} array to use as a game board
-     */
     public GameBoard(Player[][] board) {
         if (board == null) {
             throw new IllegalArgumentException("board cannot be null");
@@ -41,11 +36,6 @@ public class GameBoard {
         this.board = board;
     }
 
-    /**
-     * Create a deep copy of another game board.
-     *
-     * @param other the board to copy
-     */
     public GameBoard(GameBoard other) {
         board = new Player[ROWS][COLS];
         for (int row = 0; row < ROWS; row++) {
@@ -55,18 +45,14 @@ public class GameBoard {
         }
     }
 
-    /**
-     * Marks a position on the game board for a given player.
-     *
-     * @param a      firts point
-     * @param b      second point
-     * @param player the {@link Player} marking the board
-     * @return <code>true</code> if the position was open to mark; <code>false</code> if the position
-     * was already marked
-     * @throws IllegalArgumentException if the given position is off the board or the player is
-     */
-    public boolean mark(Point a, Point b, Player player) {
+    public boolean mark(Block b, Player player) {
+        validateBlock(b);
+        return mark(b.a, b.b, player);
+    }
+
+    private boolean mark(Point a, Point b, Player player) {
         validateBlock(new Block(a, b));
+
         if (player == null) {
             throw new IllegalArgumentException("cannot mark null player");
         }
@@ -100,6 +86,7 @@ public class GameBoard {
     public List<Block> getOpenPositions() {
         ArrayList<Block> blocks = new ArrayList<Block>();
         Point p1, p2;
+
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 p1 = new Point(row, col);
@@ -121,8 +108,6 @@ public class GameBoard {
                 } catch (Exception e) {
 
                 }
-
-
             }
         }
         return blocks;
@@ -176,11 +161,6 @@ public class GameBoard {
         if (a.x < 0 || a.x >= ROWS || a.y < 0 || a.y >= COLS) {
             throw new IllegalArgumentException("(" + a.x + "," + a.y + ") is off the board");
         }
-    }
-
-    private static void validatePosition(Point a, Point b) {
-        GameBoard.validateSinglePosition(a);
-        GameBoard.validateSinglePosition(b);
     }
 
     private static boolean validateBlock(Block p) {

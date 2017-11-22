@@ -57,14 +57,15 @@ public class TicTacToeGameState implements DiscreteGameState {
     public List<DiscreteGameState> availableStates() {
         List<Block> availableMoves = board.getOpenPositions();
 
-        List<DiscreteGameState> availableStates =
-                new ArrayList<DiscreteGameState>(availableMoves.size());
+        List<DiscreteGameState> availableStates = new ArrayList<DiscreteGameState>(availableMoves.size());
+
         for (Block move : availableMoves) {
             TicTacToeGameState newState = new TicTacToeGameState(this);
             newState.play(move.a, move.b);
             newState.switchPlayer();
             availableStates.add(newState);
         }
+
         return availableStates;
     }
 
@@ -86,11 +87,8 @@ public class TicTacToeGameState implements DiscreteGameState {
         return lastMove;
     }
 
-    /**
-     * Returns whether the given player has a winning position on the TicTacToe board.
-     */
     public boolean hasWin(Player player) {
-        return board.getOpenPositions().isEmpty();
+        return board.getOpenPositions().isEmpty() && (!currentPlayer.equals(player));
     }
 
     @Override
@@ -99,14 +97,12 @@ public class TicTacToeGameState implements DiscreteGameState {
     }
 
     /**
-     * Play a move in the given row and column of the TicTacToe board with the current player.
+     * Play a move in the given points of the TicTacToe board with the current player.
      *
-     * @param row the row to mark
-     * @param col the column to mark
      * @return <code>true</code> if this position was playable; <code>false</code> otherwise
      */
-    public boolean play(Point a, Point b) {
-        if (board.mark(a, b, currentPlayer)) {
+    private boolean play(Point a, Point b) {
+        if (board.mark(new Block(a,b), currentPlayer)) {
             lastMove = new Block(a, b);
             return true;
         }
@@ -114,18 +110,14 @@ public class TicTacToeGameState implements DiscreteGameState {
 
     }
 
-    /**
-     * Gets the game board.
-     *
-     * @return {@link GameBoard} for the current TicTacToe game; cannot be null
-     */
+    public boolean play(Block b) {
+        return play(b.a,b.b);
+    }
+
     public GameBoard getGameBoard() {
         return board;
     }
 
-    /**
-     * Switches the current player.
-     */
     public void switchPlayer() {
         currentPlayer = Player.opponentOf(currentPlayer);
     }

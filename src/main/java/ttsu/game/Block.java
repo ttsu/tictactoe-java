@@ -2,10 +2,6 @@ package ttsu.game;
 
 import java.awt.*;
 
-/**
- * A position on a 2D game board. Positions are represented as a two points beginning at the top left corner.
- * Consider refactor
- */
 public final class Block {
   public final Point a;
   public final Point b;
@@ -37,7 +33,7 @@ public final class Block {
 
   @Override
   public int hashCode() {
-    return a.hashCode() * b.hashCode();
+    return a.hashCode() + b.hashCode();
   }
 
   @Override
