@@ -48,12 +48,10 @@ public class MinimaxAgent<T extends DiscreteGameState> implements GameIntelligen
     this.evaluator = evaluator;
   }
 
-  @Override
   public T evaluateNextState(T currentState) {
     return evaluateNextState(currentState, Integer.MAX_VALUE);
   }
 
-  @Override
   public T evaluateNextState(T currentState, int depth) {
     if (currentState == null) {
       throw new IllegalArgumentException("initialState cannot be null");

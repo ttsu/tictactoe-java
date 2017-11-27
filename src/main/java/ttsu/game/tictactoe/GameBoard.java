@@ -30,9 +30,7 @@ public class GameBoard {
     }
 
     public GameBoard(Player[][] board) {
-        if (board == null) {
-            throw new IllegalArgumentException("board cannot be null");
-        }
+        validate(board);
         this.board = board;
     }
 
@@ -66,23 +64,11 @@ public class GameBoard {
         }
     }
 
-    /**
-     * Gets the mark at the given board position.
-     *
-     * @param a the row of the position to inspect
-     * @return the {@link Player} that marked the given position, or <code>null</code> if position is
-     * open
-     */
     public Player getMark(Point a) {
         validateSinglePosition(a);
         return board[a.x][a.y];
     }
 
-    /**
-     * Gets the list of open positions on the game board.
-     *
-     * @return a {@link List} of {@link Block}s; will never be null
-     */
     public List<Block> getOpenPositions() {
         ArrayList<Block> blocks = new ArrayList<Block>();
         Point p1, p2;
@@ -165,5 +151,11 @@ public class GameBoard {
 
     private static boolean validateBlock(Block p) {
         return p.isConsistent() && p.isInsideBoard();
+    }
+
+    private void validate(Player[][] board) {
+        if (board == null) {
+            throw new IllegalArgumentException("board cannot be null");
+        }
     }
 }

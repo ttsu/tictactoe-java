@@ -13,6 +13,7 @@ import ttsu.game.DiscreteGameState;
 public class TicTacToeGameState implements DiscreteGameState {
     public static enum Player {
         O, X;
+
         public static Player opponentOf(Player player) {
             return player == X ? O : X;
         }
@@ -27,41 +28,25 @@ public class TicTacToeGameState implements DiscreteGameState {
         currentPlayer = Player.X;
     }
 
-    /**
-     * Creates a new instance of a TicTacToe game state with a given board layout and current player.
-     *
-     * @param board         the current board state
-     * @param currentPlayer the current player whose turn it is to make the next move
-     */
     public TicTacToeGameState(GameBoard board, Player currentPlayer) {
-        if (board == null) {
-            throw new IllegalArgumentException("board cannot be null");
-        }
-        if (currentPlayer == null) {
-            throw new IllegalArgumentException("currentPlayer cannot be null");
-        }
+        validate(board, currentPlayer);
         this.board = board;
         this.currentPlayer = currentPlayer;
     }
 
-    /**
-     * Creates a deep copy
-     */
     public TicTacToeGameState(TicTacToeGameState other) {
         this.board = new GameBoard(other.board);
         this.currentPlayer = other.getCurrentPlayer();
         this.lastMove = other.lastMove;
     }
 
-    @Override
     public List<DiscreteGameState> availableStates() {
         List<Block> availableMoves = board.getOpenPositions();
-
         List<DiscreteGameState> availableStates = new ArrayList<DiscreteGameState>(availableMoves.size());
 
         for (Block move : availableMoves) {
             TicTacToeGameState newState = new TicTacToeGameState(this);
-            newState.play(move.a, move.b);
+            newState.play(move);
             newState.switchPlayer();
             availableStates.add(newState);
         }
@@ -71,8 +56,6 @@ public class TicTacToeGameState implements DiscreteGameState {
 
     /**
      * Gets the current player whose turn it is to make the next move.
-     *
-     * @return the {@link Player} who gets to make the next move
      */
     public Player getCurrentPlayer() {
         return currentPlayer;
@@ -80,38 +63,52 @@ public class TicTacToeGameState implements DiscreteGameState {
 
     /**
      * Gets the last position that was played on the TicTacToe board.
-     *
-     * @return a {@link Block} on the TicTacToe board, or null if no moves were taken yet.
      */
     public Block getLastMove() {
         return lastMove;
     }
 
     public boolean hasWin(Player player) {
-        return board.getOpenPositions().isEmpty() && (!currentPlayer.equals(player));
+        List<Block> openPositions = board.getOpenPositions();
+        if (openPositions.size() == 1) {
+            return currentPlayer.equals(player);
+        } else if (openPositions.size() == 2) {
+            return openPositions.get(0).hasCommonPoint(openPositions.get(1));
+        } else if (openPositions.size() == 0) {
+            return getCurrentPlayer().equals(player);
+        }
+
+        return false;
     }
 
-    @Override
     public boolean isOver() {
-        return hasWin(Player.O) || hasWin(Player.X) || board.getOpenPositions().isEmpty();
+        return hasWin(Player.O) || hasWin(Player.X);
     }
 
     /**
      * Play a move in the given points of the TicTacToe board with the current player.
-     *
-     * @return <code>true</code> if this position was playable; <code>false</code> otherwise
      */
     private boolean play(Point a, Point b) {
-        if (board.mark(new Block(a,b), currentPlayer)) {
-            lastMove = new Block(a, b);
+        Block block = new Block(a, b);
+        if (board.mark(block, currentPlayer)) {
+            lastMove = block;
             return true;
         }
         return false;
 
     }
 
+    private void validate(GameBoard board, Player currentPlayer) {
+        if (board == null) {
+            throw new IllegalArgumentException("board cannot be null");
+        }
+        if (currentPlayer == null) {
+            throw new IllegalArgumentException("currentPlayer cannot be null");
+        }
+    }
+
     public boolean play(Block b) {
-        return play(b.a,b.b);
+        return play(b.a, b.b);
     }
 
     public GameBoard getGameBoard() {

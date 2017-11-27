@@ -11,17 +11,12 @@ public class TicTacToeEvaluator implements StateEvaluator<TicTacToeGameState> {
     private final Player player;
 
     public TicTacToeEvaluator(Player player) {
-        if (player == null) {
-            throw new IllegalArgumentException("player cannot be null");
-        }
+        validate(player);
         this.player = player;
     }
 
-    @Override
     public int evaluate(TicTacToeGameState game) {
-        if (game == null) {
-            throw new IllegalArgumentException("cannot evaluate null game");
-        }
+        validate(game);
 
         if (game.hasWin(player)) {
             return game.availableStates().size() + 1;
@@ -32,4 +27,15 @@ public class TicTacToeEvaluator implements StateEvaluator<TicTacToeGameState> {
         }
     }
 
+    private void validate(TicTacToeGameState game) {
+        if (game == null) {
+            throw new IllegalArgumentException("cannot evaluate null game");
+        }
+    }
+
+    private void validate(Player player) {
+        if (player == null) {
+            throw new IllegalArgumentException("player cannot be null");
+        }
+    }
 }
