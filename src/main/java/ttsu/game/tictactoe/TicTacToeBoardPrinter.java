@@ -16,14 +16,15 @@ public class TicTacToeBoardPrinter {
 
     public void printGameBoard(GameBoard board) {
         StringBuilder str = new StringBuilder();
-        for(int i = 0; i < board.GetCols(); i++) {
+
+        for(int i = 0; i < board.getSize(); i++) {
             str.append("-");
-            if (i != board.GetCols() - 1) {
+            if (i != board.getSize() - 1) {
                 str.append("+");
             }
         }
 
-        for (int i = 0; i < board.GetCols(); i++) {
+        for (int i = 0; i < board.getSize(); i++) {
             printRow(i, board);
             printStream.println(str.toString());
         }
@@ -35,12 +36,12 @@ public class TicTacToeBoardPrinter {
         StringBuilder str = new StringBuilder();
         ArrayList<String> output = new ArrayList<String>();
 
-        for (int i = 0; i < board.GetRows(); i++) {
+        for (int i = 0; i < board.getSize(); i++) {
             output.add(
                     markToString(board.getMark(new Point(row, i))));
             str.append("%s");
 
-            if (i == board.GetRows() - 1) {
+            if (i == board.getSize() - 1) {
                 str.append("\r\n");
             } else {
                 str.append("|");

@@ -19,9 +19,9 @@ public final class Block {
         return a.distance(b) == 1.0;
     }
 
-    public boolean isInsideBoard() {
-        return a.x >= 0 && a.x < Main.X && b.x >= 0 && b.y < Main.Y;
-    }
+//    public boolean isInsideBoard() {
+//        return a.x >= 0 && a.x < Main.X && b.x >= 0 && b.y < Main.Y;
+//    }
 
     @Override
     public boolean equals(Object obj) {
@@ -42,6 +42,9 @@ public final class Block {
 
     @Override
     public String toString() {
-        return "Block: " + "(" + this.a.toString() + ") " + this.b.toString() + ")";
+        return (this.a.x + (Main.COUNT_FROM_ONE ? 1 : 0)) + "x" +
+                (this.a.y + (Main.COUNT_FROM_ONE ? 1 : 0)) + "_" +
+                (this.b.x + (Main.COUNT_FROM_ONE ? 1 : 0)) + "x" +
+                (this.b.y + (Main.COUNT_FROM_ONE ? 1 : 0));
     }
 }

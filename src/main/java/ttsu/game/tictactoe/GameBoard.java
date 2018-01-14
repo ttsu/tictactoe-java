@@ -11,35 +11,38 @@ import ttsu.game.tictactoe.TicTacToeGameState.Player;
 
 
 public class GameBoard {
-
-    private static final int COLS = Main.X;
-    private static final int ROWS = Main.Y;
-
     private final Player[][] board;
+    private final int size;
 
-    public GameBoard() {
-        board = new Player[ROWS][COLS];
+    public GameBoard(int size) {
+        board = new Player[size][size];
+        this.size = size;
     }
 
-    public int GetRows() {
-        return ROWS;
+    public GameBoard(int size, ArrayList<Point> excluded) {
+        board = new Player[size][size];
+        this.size = size;
+
+        for (Point point : excluded) {
+            board[point.x][point.y] = Player.N;
+        }
     }
 
-    public int GetCols() {
-        return COLS;
+    public int getSize() {
+        return this.size;
     }
 
     public GameBoard(Player[][] board) {
         validate(board);
         this.board = board;
+        this.size = board.length;
     }
 
     public GameBoard(GameBoard other) {
-        board = new Player[ROWS][COLS];
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLS; col++) {
-                board[row][col] = other.board[row][col];
-            }
+        this.size = other.getSize();
+        board = new Player[this.size][this.size];
+        for (int row = 0; row < this.size; row++) {
+            System.arraycopy(other.board[row], 0, board[row], 0, this.size);
         }
     }
 
@@ -73,37 +76,52 @@ public class GameBoard {
         ArrayList<Block> blocks = new ArrayList<Block>();
         Point p1, p2;
 
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLS; col++) {
-                p1 = new Point(row, col);
-                p2 = new Point(row, col + 1);
+//        if (this.openPositions != null) {
+//            return this.openPositions;
+//        }
 
-                try {
-                    if (validateBlock(new Block(p1, p2)) && getMark(p1) == null && getMark(p2) == null) {
-                        blocks.add(new Block(p1, p2));
+        long startTime = System.nanoTime();
+
+        for (int row = 0; row < this.size; row++) {
+            for (int col = 0; col < this.size; col++) {
+                if(this.board[row][col] != Player.O && this.board[row][col] != Player.X && this.board[row][col] != Player.N) {
+                    p1 = new Point(row, col);
+                    p2 = new Point(row, col + 1);
+
+                    try {
+                        if (validateBlock(new Block(p1, p2)) && getMark(p1) == null && getMark(p2) == null) {
+                            blocks.add(new Block(p1, p2));
+                        }
+                    } catch (Exception e) {
+
                     }
-                } catch (Exception e) {
 
-                }
+                    try {
+                        p2 = new Point(row + 1, col);
+                        if (validateBlock(new Block(p1, p2)) && getMark(p1) == null && getMark(p2) == null) {
+                            blocks.add(new Block(p1, p2));
+                        }
+                    } catch (Exception e) {
 
-                try {
-                    p2 = new Point(row + 1, col);
-                    if (validateBlock(new Block(p1, p2)) && getMark(p1) == null && getMark(p2) == null) {
-                        blocks.add(new Block(p1, p2));
                     }
-                } catch (Exception e) {
-
                 }
             }
         }
+
+        if (Main.DEBUG) {
+            double result = (System.nanoTime() - startTime) / 1000000;
+            System.out.println("getOpenPositions GameBoard.java: " + result);
+        }
+
+//        this.openPositions = blocks;
         return blocks;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLS; col++) {
+        for (int row = 0; row < this.size; row++) {
+            for (int col = 0; col < this.size; col++) {
                 Player p = board[row][col];
                 if (p != null) {
                     sb.append(p);
@@ -125,7 +143,7 @@ public class GameBoard {
             return false;
         }
         GameBoard other = (GameBoard) obj;
-        for (int row = 0; row < ROWS; row++) {
+        for (int row = 0; row < this.size; row++) {
             if (!Arrays.equals(board[row], other.board[row])) {
                 return false;
             }
@@ -137,20 +155,20 @@ public class GameBoard {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        for (int row = 0; row < ROWS; row++) {
+        for (int row = 0; row < this.size; row++) {
             result = prime * result + Arrays.hashCode(board[row]);
         }
         return result;
     }
 
-    private static void validateSinglePosition(Point a) {
-        if (a.x < 0 || a.x >= ROWS || a.y < 0 || a.y >= COLS) {
+    private void validateSinglePosition(Point a) {
+        if (a.x < 0 || a.x >= this.size || a.y < 0 || a.y >= this.size) {
             throw new IllegalArgumentException("(" + a.x + "," + a.y + ") is off the board");
         }
     }
 
-    private static boolean validateBlock(Block p) {
-        return p.isConsistent() && p.isInsideBoard();
+    private boolean validateBlock(Block p) {
+        return p.isConsistent() && p.a.x >= 0 && p.a.x < this.size && p.b.x >= 0 && p.b.y < this.size;
     }
 
     private void validate(Player[][] board) {

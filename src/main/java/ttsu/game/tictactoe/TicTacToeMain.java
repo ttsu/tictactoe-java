@@ -11,14 +11,9 @@ import ttsu.game.tictactoe.TicTacToeGameState.Player;
 public class TicTacToeMain {
     public static void main(String[] args) {
 
-        TicTacToeEvaluator evaluator = new TicTacToeEvaluator(Player.O);
-
-        GameIntelligenceAgent<TicTacToeGameState> agent = new MinimaxAgent<TicTacToeGameState>(evaluator);
         GameIntelligenceAgent<TicTacToeGameState> propabilityAgent = new PropabilityAgent<TicTacToeGameState>();
 
-        Scanner scanner = new Scanner(System.in);
-
-        TicTacToeGameRunner game = new TicTacToeGameRunner(agent, propabilityAgent, scanner, System.out);
+        TicTacToeGameRunner game = new TicTacToeGameRunner(propabilityAgent, System.out);
 
         game.run();
     }

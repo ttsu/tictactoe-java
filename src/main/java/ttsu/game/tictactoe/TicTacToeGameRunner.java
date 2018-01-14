@@ -14,19 +14,13 @@ import ttsu.game.tictactoe.TicTacToeGameState.Player;
 public class TicTacToeGameRunner {
     private TicTacToeGameState game;
     private TicTacToeBoardPrinter boardPrinter;
-    private GameIntelligenceAgent<TicTacToeGameState> agent;
     private GameIntelligenceAgent<TicTacToeGameState> propabilityAgent;
-    private Scanner scanner;
     private PrintStream printStream;
 
-    public TicTacToeGameRunner(GameIntelligenceAgent<TicTacToeGameState> agent,
-                               GameIntelligenceAgent<TicTacToeGameState> propabilityAgent,
-                               Scanner scanner,
+    public TicTacToeGameRunner(GameIntelligenceAgent<TicTacToeGameState> propabilityAgent,
                                PrintStream printStream) {
         this.game = new TicTacToeGameState();
         this.boardPrinter = new TicTacToeBoardPrinter(printStream);
-        this.agent = agent;
-        this.scanner = scanner;
         this.printStream = printStream;
         this.propabilityAgent = propabilityAgent;
     }
@@ -36,13 +30,15 @@ public class TicTacToeGameRunner {
     }
 
     public void run() {
-        printStream.println("Game has started");
+        printStream.println("Game is starting - randomly by " + game.getCurrentPlayer());
 
         while (!game.isOver()) {
             moveRandomlyComputer();
-//            moveComputer();
             game.switchPlayer();
+            boardPrinter.printGameBoard(game.getGameBoard());
+
             movePropabilityComputer();
+            game.switchPlayer();
             boardPrinter.printGameBoard(game.getGameBoard());
         }
         printGameOver();
@@ -50,10 +46,6 @@ public class TicTacToeGameRunner {
 
     void movePropabilityComputer() {
         moveAny(propabilityAgent.evaluateNextState(game));
-    }
-
-    void moveComputer() {
-        moveAny(agent.evaluateNextState(game));
     }
 
     void moveRandomlyComputer() {

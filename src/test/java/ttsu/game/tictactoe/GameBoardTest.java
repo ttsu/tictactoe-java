@@ -12,6 +12,7 @@ import ttsu.game.tictactoe.GameBoard;
 import ttsu.game.tictactoe.TicTacToeGameState.Player;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 
 public class GameBoardTest {
@@ -23,7 +24,70 @@ public class GameBoardTest {
 
     @Before
     public void setup() {
-        board = new GameBoard();
+        board = new GameBoard(3);
+    }
+
+    @Test
+    public void shouldBeGood() {
+        // Arrange
+        ArrayList<Point> except = new ArrayList<Point>();
+        except.add(new Point(2,2));
+        except.add(new Point(2,3));
+        except.add(new Point(3,1));
+        except.add(new Point(3,2));
+        except.add(new Point(0,1));
+        except.add(new Point(0,0));
+        except.add(new Point(1,0));
+        except.add(new Point(2,0));
+
+        board = new GameBoard(4, except);
+
+        // Act && Assert
+        assertThat(board.getOpenPositions()).containsOnly(
+                new Block(new Point(0,2), new Point(0,2))
+//                new Block(new Point(0,2), new Point(1,2)),
+//                new Block(new Point(1,0), new Point(2,0)),
+//                new Block(new Point(2,0), new Point(2,1))
+        );
+    }
+
+    @Test
+    public void Should_Return_Without_Exception_Points() {
+        // Arrange
+        ArrayList<Point> except = new ArrayList<Point>();
+        except.add(new Point(0,0));
+        except.add(new Point(1,1));
+        except.add(new Point(2,2));
+
+        board = new GameBoard(3, except);
+
+        // Act && Assert
+        assertThat(board.getOpenPositions()).containsOnly(
+                new Block(new Point(0,1), new Point(0,2)),
+                new Block(new Point(0,2), new Point(1,2)),
+                new Block(new Point(1,0), new Point(2,0)),
+                new Block(new Point(2,0), new Point(2,1))
+        );
+    }
+
+    @Test
+    public void Should_Return_Without_Exception_Points_2() {
+        // Arrange
+        ArrayList<Point> except = new ArrayList<Point>();
+        except.add(new Point(0,0));
+        except.add(new Point(1,1));
+
+        board = new GameBoard(3, except);
+
+        // Act && Assert
+        assertThat(board.getOpenPositions()).containsOnly(
+                new Block(new Point(0,1), new Point(0,2)),
+                new Block(new Point(0,2), new Point(1,2)),
+                new Block(new Point(1,0), new Point(2,0)),
+                new Block(new Point(2,0), new Point(2,1)),
+                new Block(new Point(1,2), new Point(2,2)),
+                new Block(new Point(2,1), new Point(2,2))
+                );
     }
 
     // -- constructor
@@ -38,10 +102,12 @@ public class GameBoardTest {
 
         board.mark(new Block(p1, p2), Player.X);
         GameBoard newBoard = new GameBoard(board);
+
         assertThat(newBoard.getMark(p1)).isEqualTo(Player.X);
         assertThat(newBoard.getMark(p2)).isEqualTo(Player.X);
 
         newBoard.mark(new Block(p3, p4), Player.O);
+
         assertThat(board.getMark(p3)).isNotEqualTo(Player.X);
         assertThat(board.getMark(p4)).isNotEqualTo(Player.X);
     }
@@ -103,13 +169,6 @@ public class GameBoardTest {
         board.mark(new Block(p1, p2), null);
     }
 
-    //    @Test
-//    public void markOffBoard() {
-//        thrown.expect(IllegalArgumentException.class);
-//        thrown.expectMessage("(3,0) is off the board");
-//        board.mark(3, 0, null);
-//    }
-//
 //    // -- getOpenPositions
 //
     @Test
@@ -140,7 +199,7 @@ public class GameBoardTest {
                 new Block(p6, p9)
         );
     }
-//
+
 //    @Test
 //    public void getOpenPositions() {
 //        board.mark(0, 0, Player.X);

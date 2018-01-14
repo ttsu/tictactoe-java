@@ -1,15 +1,16 @@
 package ttsu.game.ai;
 
 import ttsu.game.DiscreteGameState;
-import ttsu.game.ai.heuristic.StateEvaluator;
+import ttsu.game.Main;
+import ttsu.game.Watcher;
 import ttsu.game.tictactoe.TicTacToeGameState;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PropabilityAgent<T extends DiscreteGameState> implements GameIntelligenceAgent<T> {
-    TicTacToeGameState.Player initialPlayer;
+    private TicTacToeGameState.Player initialPlayer;
+    private long startTime;
 
     private static class Node<S extends DiscreteGameState> {
         private S state;
@@ -32,25 +33,31 @@ public class PropabilityAgent<T extends DiscreteGameState> implements GameIntell
     }
 
     public T evaluateNextState(T currentState) {
-        return evaluateNextState(currentState, 5);
+        return evaluateNextState(currentState, Main.PROP_DEPTH);
     }
 
     public T evaluateNextState(T currentState, int depth) {
-        validate(currentState, depth);
         initialPlayer = currentState.getCurrentPlayer();
+        PropabilityAgent.Node<T> root = null;
 
-        System.out.println("Evaluating next state");
-        PropabilityAgent.Node<T> root = buildTree(currentState, depth);
+        this.startTime = System.nanoTime();
 
+        try {
+            root = buildTree(currentState, depth);
+        } catch (Exception e) {
+            RandomAgent<T> ra = new RandomAgent<T>();
+            return ra.evaluateNextState(currentState);
+        }
 
         if (root.bestChild == null) {
-            return root.state;
+            RandomAgent<T> ra = new RandomAgent<T>();
+            return ra.evaluateNextState(currentState);
         }
 
         return root.bestChild.state;
     }
 
-    private PropabilityAgent.Node<T> buildTree(T state, int depth) {
+    private PropabilityAgent.Node<T> buildTree(T state, int depth) throws Exception {
         PropabilityAgent.Node<T> current = new PropabilityAgent.Node<T>(state);
         List<DiscreteGameState> availableStates = state.availableStates();
 
@@ -58,12 +65,13 @@ public class PropabilityAgent<T extends DiscreteGameState> implements GameIntell
             this.setPropabilitiesForLastGame(current);
         } else {
             ArrayList<PropabilityAgent.Node<T>> children = new ArrayList<PropabilityAgent.Node<T>>();
-            System.out.println("Building tree level " + depth + ", there is " + availableStates.size() + " possibilities.");
+
             for (DiscreteGameState nextState : availableStates) {
-                if(depth < 0) {
-                    current.bestChild = null;
-                    return current;
+                if (depth < 0 || (Watcher.timePassedMs(this.startTime) > Main.TIME_LIMIT && !Main.DEBUG)) {
+                    throw new Exception("too long");
                 }
+//                 todo: coś dziwnego chyba
+
                 PropabilityAgent.Node<T> child = buildTree((T) nextState, depth - 1);
                 children.add(child);
 
@@ -78,8 +86,6 @@ public class PropabilityAgent<T extends DiscreteGameState> implements GameIntell
                     } catch (ArithmeticException e) {
                         return current;
                     }
-
-
                 }
                 current.bestChild = bestChild;
             }
@@ -101,14 +107,5 @@ public class PropabilityAgent<T extends DiscreteGameState> implements GameIntell
             current.bestChild = null;
         }
         current.children = null;
-    }
-
-    private void validate(T state, int depth) {
-        if (state == null) {
-            throw new IllegalArgumentException("initialState cannot be null");
-        }
-        if (depth < 0) {
-            throw new IllegalArgumentException("depth cannot be less than zero. depth=" + depth);
-        }
     }
 }

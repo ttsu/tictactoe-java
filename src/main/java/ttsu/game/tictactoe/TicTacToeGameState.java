@@ -6,13 +6,11 @@ import java.util.List;
 
 import ttsu.game.Block;
 import ttsu.game.DiscreteGameState;
+import ttsu.game.Main;
 
-/**
- * A {@link DiscreteGameState} representing the current state of a TicTacToe game.
- */
 public class TicTacToeGameState implements DiscreteGameState {
     public static enum Player {
-        O, X;
+        O, X, N;
 
         public static Player opponentOf(Player player) {
             return player == X ? O : X;
@@ -22,21 +20,31 @@ public class TicTacToeGameState implements DiscreteGameState {
     private final GameBoard board;
     private Player currentPlayer;
     private Block lastMove;
+    List<Block> availableMoves;
 
     public TicTacToeGameState() {
-        board = new GameBoard();
+        board = new GameBoard(Main.DEFAULT_SIZE);
+        availableMoves = board.getOpenPositions();
+        currentPlayer = Player.X;
+    }
+
+    public TicTacToeGameState(int size, ArrayList<Point> excluded) {
+        board = new GameBoard(size, excluded);
+        availableMoves = board.getOpenPositions();
         currentPlayer = Player.X;
     }
 
     public TicTacToeGameState(GameBoard board, Player currentPlayer) {
         validate(board, currentPlayer);
         this.board = board;
+        availableMoves = board.getOpenPositions();
         this.currentPlayer = currentPlayer;
     }
 
     public TicTacToeGameState(TicTacToeGameState other) {
         this.board = new GameBoard(other.board);
         this.currentPlayer = other.getCurrentPlayer();
+        availableMoves = board.getOpenPositions();
         this.lastMove = other.lastMove;
     }
 
@@ -54,16 +62,10 @@ public class TicTacToeGameState implements DiscreteGameState {
         return availableStates;
     }
 
-    /**
-     * Gets the current player whose turn it is to make the next move.
-     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
-    /**
-     * Gets the last position that was played on the TicTacToe board.
-     */
     public Block getLastMove() {
         return lastMove;
     }
@@ -85,9 +87,6 @@ public class TicTacToeGameState implements DiscreteGameState {
         return hasWin(Player.O) || hasWin(Player.X);
     }
 
-    /**
-     * Play a move in the given points of the TicTacToe board with the current player.
-     */
     private boolean play(Point a, Point b) {
         Block block = new Block(a, b);
         if (board.mark(block, currentPlayer)) {
