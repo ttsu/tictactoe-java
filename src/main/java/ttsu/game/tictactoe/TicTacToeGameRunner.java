@@ -1,12 +1,8 @@
 package ttsu.game.tictactoe;
 
 import java.io.PrintStream;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
 
 import ttsu.game.Block;
-import ttsu.game.Main;
 import ttsu.game.ai.GameIntelligenceAgent;
 import ttsu.game.ai.RandomAgent;
 import ttsu.game.tictactoe.TicTacToeGameState.Player;
@@ -35,11 +31,11 @@ public class TicTacToeGameRunner {
         while (!game.isOver()) {
             moveRandomlyComputer();
             game.switchPlayer();
-            boardPrinter.printGameBoard(game.getGameBoard());
+//            boardPrinter.printGameBoard(game.getGameBoard());
 
-            movePropabilityComputer();
+            moveRandomlyComputer();
             game.switchPlayer();
-            boardPrinter.printGameBoard(game.getGameBoard());
+//            boardPrinter.printGameBoard(game.getGameBoard());
         }
         printGameOver();
     }

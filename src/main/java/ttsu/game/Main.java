@@ -5,7 +5,7 @@ public class Main {
     public static int PROP_DEPTH = 100;
     public static boolean COUNT_FROM_ONE = false;
     public static boolean DEBUG = false;
-    public static long TIME_LIMIT = 280;
+    public static long TIME_LIMIT = 200;
 
     public static void main(String[] args) {
 

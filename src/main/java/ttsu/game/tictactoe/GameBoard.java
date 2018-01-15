@@ -7,6 +7,7 @@ import java.util.List;
 
 import ttsu.game.Main;
 import ttsu.game.Block;
+import ttsu.game.Watcher;
 import ttsu.game.tictactoe.TicTacToeGameState.Player;
 
 
@@ -32,17 +33,13 @@ public class GameBoard {
         return this.size;
     }
 
-    public GameBoard(Player[][] board) {
-        validate(board);
-        this.board = board;
-        this.size = board.length;
-    }
-
     public GameBoard(GameBoard other) {
         this.size = other.getSize();
         board = new Player[this.size][this.size];
         for (int row = 0; row < this.size; row++) {
-            System.arraycopy(other.board[row], 0, board[row], 0, this.size);
+            for (int col = 0; col < this.size; col++) {
+                board[row] = other.board[row].clone();
+            }
         }
     }
 
@@ -84,6 +81,10 @@ public class GameBoard {
 
         for (int row = 0; row < this.size; row++) {
             for (int col = 0; col < this.size; col++) {
+                if(Watcher.timePassedMs(startTime) > Main.TIME_LIMIT && blocks.size() != 0) {
+                    return blocks;
+                }
+
                 if(this.board[row][col] != Player.O && this.board[row][col] != Player.X && this.board[row][col] != Player.N) {
                     p1 = new Point(row, col);
                     p2 = new Point(row, col + 1);
@@ -109,8 +110,7 @@ public class GameBoard {
         }
 
         if (Main.DEBUG) {
-            double result = (System.nanoTime() - startTime) / 1000000;
-            System.out.println("getOpenPositions GameBoard.java: " + result);
+//            System.out.println("getOpenPositions GameBoard.java: " + Watcher.timePassedMs(startTime));
         }
 
 //        this.openPositions = blocks;

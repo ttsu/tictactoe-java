@@ -10,7 +10,6 @@ import ttsu.game.tictactoe.TicTacToeGameState.Player;
 
 public class TicTacToeMain {
     public static void main(String[] args) {
-
         GameIntelligenceAgent<TicTacToeGameState> propabilityAgent = new PropabilityAgent<TicTacToeGameState>();
 
         TicTacToeGameRunner game = new TicTacToeGameRunner(propabilityAgent, System.out);
