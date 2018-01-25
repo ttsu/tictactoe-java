@@ -1,0 +1,2 @@
+java -jar .Programs/Anna_Grenda/bricksbot-1.0-SNAPSHOT.jar 100 16
+Anna Grenda

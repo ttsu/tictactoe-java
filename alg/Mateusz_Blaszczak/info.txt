@@ -1,0 +1,2 @@
+java -jar ./Programs/Mateusz_Blaszczak/Bloczki.jar
+Bloczki.jar (Mateusz B³aszczak)

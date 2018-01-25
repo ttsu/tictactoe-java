@@ -1,0 +1,1 @@
+java - jar .\Programs\A_Pawlikowska\APawlikowska.jar
