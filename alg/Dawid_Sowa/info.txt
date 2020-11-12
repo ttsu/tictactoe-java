@@ -1,0 +1,1 @@
+java -jar ./Programs/Dawid_Sowa/Dawid.jar

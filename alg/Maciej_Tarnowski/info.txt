@@ -1,0 +1,2 @@
+java -jar -XX:+UseConcMarkSweepGC ./Programs/Maciej_Tarnowski/Maciej_Tarnowski.jar
+Maciej "Anal destroyer" Tarnowski

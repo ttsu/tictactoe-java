@@ -1,0 +1,2 @@
+java -cp bricks-1.0-SNAPSHOT.jar com.algorytmy.bricks.App
+Jakub Bielawski

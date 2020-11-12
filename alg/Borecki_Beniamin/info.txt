@@ -1,0 +1,2 @@
+java -jar ./Programs/Borecki_Beniamin/AlgorytmWalczacy.jar
+Borecki Beniamin

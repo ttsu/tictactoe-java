@@ -1,0 +1,2 @@
+java -jar ./Programs/Artur_Braksator/programWalczacy.jar
+programWalczacy.jar (Artur Braksator)

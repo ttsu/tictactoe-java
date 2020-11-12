@@ -1,159 +1,179 @@
 package ttsu.game.tictactoe;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import ttsu.game.Position;
+import ttsu.game.Main;
+import ttsu.game.Block;
+import ttsu.game.Watcher;
 import ttsu.game.tictactoe.TicTacToeGameState.Player;
 
-/**
- * Represents a TicTacToe game board.
- * 
- * @author Tim Tsu
- * 
- */
+
 public class GameBoard {
+    private final Player[][] board;
+    private final int size;
 
-  private static final int COLS = 3;
-  private static final int ROWS = 3;
-
-  private final Player[][] board;
-
-  /**
-   * Creates a new blank TicTacToe board.
-   */
-  public GameBoard() {
-    board = new Player[ROWS][COLS];
-  }
-
-  /**
-   * Create a game board from an array.
-   * 
-   * @param board the {@link Player} array to use as a game board
-   */
-  public GameBoard(Player[][] board) {
-    if (board == null) {
-      throw new IllegalArgumentException("board cannot be null");
+    public GameBoard(int size) {
+        board = new Player[size][size];
+        this.size = size;
     }
-    this.board = board;
-  }
 
-  /**
-   * Create a deep copy of another game board.
-   * 
-   * @param board the board to copy
-   */
-  public GameBoard(GameBoard other) {
-    board = new Player[ROWS][COLS];
-    for (int row = 0; row < ROWS; row++) {
-      for (int col = 0; col < COLS; col++) {
-        board[row][col] = other.board[row][col];
-      }
-    }
-  }
+    public GameBoard(int size, ArrayList<Point> excluded) {
+        board = new Player[size][size];
+        this.size = size;
 
-  /**
-   * Marks a position on the game board for a given player.
-   * 
-   * @param row the row of the position on the board to mark
-   * @param col the column of the position on the board to mark
-   * @param player the {@link Player} marking the board
-   * @return <code>true</code> if the position was open to mark; <code>false</code> if the position
-   *         was already marked
-   * @throws IllegalArgumentException if the given position is off the board or the player is
-   *         <code>null</code>
-   */
-  public boolean mark(int row, int col, Player player) {
-    validatePosition(row, col);
-    if (player == null) {
-      throw new IllegalArgumentException("cannot mark null player");
-    }
-    if (board[row][col] != null) {
-      return false;
-    } else {
-      board[row][col] = player;
-      return true;
-    }
-  }
-
-  /**
-   * Gets the mark at the given board position.
-   * 
-   * @param row the row of the position to inspect
-   * @param col the column of the position to inspect
-   * @return the {@link Player} that marked the given position, or <code>null</code> if position is
-   *         open
-   */
-  public Player getMark(int row, int col) {
-    validatePosition(row, col);
-    return board[row][col];
-  }
-
-  /**
-   * Gets the list of open positions on the game board.
-   * 
-   * @return a {@link List} of {@link Position}s; will never be null
-   */
-  public List<Position> getOpenPositions() {
-    ArrayList<Position> positions = new ArrayList<Position>();
-    for (int row = 0; row < ROWS; row++) {
-      for (int col = 0; col < COLS; col++) {
-        if (board[row][col] == null) {
-          positions.add(new Position(row, col));
+        for (Point point : excluded) {
+            board[point.x][point.y] = Player.N;
         }
-      }
     }
-    return positions;
-  }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    for (int row = 0; row < ROWS; row++) {
-      for (int col = 0; col < COLS; col++) {
-        Player p = board[row][col];
-        if (p != null) {
-          sb.append(p);
+    public int getSize() {
+        return this.size;
+    }
+
+    public GameBoard(GameBoard other) {
+        this.size = other.getSize();
+        board = new Player[this.size][this.size];
+        for (int row = 0; row < this.size; row++) {
+            for (int col = 0; col < this.size; col++) {
+                board[row] = other.board[row].clone();
+            }
+        }
+    }
+
+    public boolean mark(Block b, Player player) {
+        validateBlock(b);
+        return mark(b.a, b.b, player);
+    }
+
+    private boolean mark(Point a, Point b, Player player) {
+        validateBlock(new Block(a, b));
+
+        if (player == null) {
+            throw new IllegalArgumentException("cannot mark null player");
+        }
+        if (board[a.x][a.y] != null && board[b.x][b.y] != null) {
+            return false;
         } else {
-          sb.append(' ');
+            board[a.x][a.y] = player;
+            board[b.x][b.y] = player;
+
+            return true;
         }
-      }
-      sb.append('\n');
     }
-    return sb.toString();
-  }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
+    public Player getMark(Point a) {
+        validateSinglePosition(a);
+        return board[a.x][a.y];
     }
-    if (!(obj instanceof GameBoard)) {
-      return false;
-    }
-    GameBoard other = (GameBoard) obj;
-    for (int row = 0; row < ROWS; row++) {
-      if (!Arrays.equals(board[row], other.board[row])) {
-        return false;
-      }
-    }
-    return true;
-  }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    for (int row = 0; row < ROWS; row++) {
-      result = prime * result + Arrays.hashCode(board[row]);
-    }
-    return result;
-  }
+    public List<Block> getOpenPositions() {
+        ArrayList<Block> blocks = new ArrayList<Block>();
+        Point p1, p2;
 
-  private static void validatePosition(int row, int col) {
-    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
-      throw new IllegalArgumentException("(" + row + "," + col + ") is off the board");
+//        if (this.openPositions != null) {
+//            return this.openPositions;
+//        }
+
+        long startTime = System.nanoTime();
+
+        for (int row = 0; row < this.size; row++) {
+            for (int col = 0; col < this.size; col++) {
+                if(Watcher.timePassedMs(startTime) > Main.TIME_LIMIT && blocks.size() != 0) {
+                    return blocks;
+                }
+
+                if(this.board[row][col] != Player.O && this.board[row][col] != Player.X && this.board[row][col] != Player.N) {
+                    p1 = new Point(row, col);
+                    p2 = new Point(row, col + 1);
+
+                    try {
+                        if (validateBlock(new Block(p1, p2)) && getMark(p1) == null && getMark(p2) == null) {
+                            blocks.add(new Block(p1, p2));
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        p2 = new Point(row + 1, col);
+                        if (validateBlock(new Block(p1, p2)) && getMark(p1) == null && getMark(p2) == null) {
+                            blocks.add(new Block(p1, p2));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+        }
+
+        if (Main.DEBUG) {
+//            System.out.println("getOpenPositions GameBoard.java: " + Watcher.timePassedMs(startTime));
+        }
+
+//        this.openPositions = blocks;
+        return blocks;
     }
-  }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int row = 0; row < this.size; row++) {
+            for (int col = 0; col < this.size; col++) {
+                Player p = board[row][col];
+                if (p != null) {
+                    sb.append(p);
+                } else {
+                    sb.append(' ');
+                }
+            }
+            sb.append('\n');
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof GameBoard)) {
+            return false;
+        }
+        GameBoard other = (GameBoard) obj;
+        for (int row = 0; row < this.size; row++) {
+            if (!Arrays.equals(board[row], other.board[row])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        for (int row = 0; row < this.size; row++) {
+            result = prime * result + Arrays.hashCode(board[row]);
+        }
+        return result;
+    }
+
+    private void validateSinglePosition(Point a) {
+        if (a.x < 0 || a.x >= this.size || a.y < 0 || a.y >= this.size) {
+            throw new IllegalArgumentException("(" + a.x + "," + a.y + ") is off the board");
+        }
+    }
+
+    private boolean validateBlock(Block p) {
+        return p.isConsistent() && p.a.x >= 0 && p.a.x < this.size && p.b.x >= 0 && p.b.y < this.size;
+    }
+
+    private void validate(Player[][] board) {
+        if (board == null) {
+            throw new IllegalArgumentException("board cannot be null");
+        }
+    }
 }
