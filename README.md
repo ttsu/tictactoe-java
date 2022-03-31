@@ -1,3 +1,10 @@
+Adapted for use in York University EECS4315 Project
+
+Modifications:
+* replacing user inputs with random inputs, automating the entire game.
+
+
+***
 # Simple TicTacToe Game #
 by Tim Tsu
 

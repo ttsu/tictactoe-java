@@ -1,6 +1,7 @@
 package ttsu.game.tictactoe;
 
 import java.io.PrintStream;
+import java.util.Random;
 import java.util.Scanner;
 
 import ttsu.game.Position;
@@ -78,11 +79,19 @@ public class TicTacToeGameRunner {
 
   void moveHuman() {
     Position userPosition;
+    Random rng = new Random(); 
     while (true) {
       do {
         printStream.print("Player X [row,col]: ");
-        String input = scanner.nextLine();
+//        original code used scanner input for the players next move.
+//        Here, we replace with 2 random ints between [0,2], with a blank println
+//        to adjust for the formatting difference
+        
+//        String input = scanner.nextLine();
+        System.out.println("");
+        String input = String.format("%s,%s", rng.nextInt(3), rng.nextInt(3)) ;
         userPosition = parseUserInput(input);
+       
       } while (userPosition == null);
 
       try {
