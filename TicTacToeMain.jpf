@@ -1,0 +1,4 @@
+target=ttsu.game.tictactoe.TicTacToeMain
+classpath=./target/classes
+sourcepath=./src/main/java
+cg.enumerate_random=true
