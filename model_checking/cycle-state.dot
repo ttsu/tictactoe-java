@@ -1,0 +1,37 @@
+digraph jpf_state_space {
+/* searchAdvanced(0, Thd0:java/util/Random.java:-1, true) */
+/* searchAdvanced(1, Thd0:java/util/Random.java:-1, true) */
+  st0 -> tr0;
+  tr0 [label="Thd0:java/util/Random.java:-1",shape=box]
+  tr0 -> st1;  st0 [label="0",shape=circle,color=black];
+/* searchAdvanced(2, Thd0:ttsu/game/tictactoe/GameBoard.java:101, true) */
+  st1 -> tr1;
+  tr1 [label="Thd0:ttsu/game/tictactoe/GameBoard.java:101",shape=box]
+  tr1 -> st2;  st1 [label="1",shape=circle,color=black];
+/* searchAdvanced(3, Thd0:java/util/Random.java:-1, true) */
+  st2 -> tr2;
+  tr2 [label="Thd0:java/util/Random.java:-1",shape=box]
+  tr2 -> st3;  st2 [label="2",shape=circle,color=black];
+/* searchAdvanced(4, Thd0:java/util/Random.java:-1, true) */
+  st3 -> tr3;
+  tr3 [label="Thd0:java/util/Random.java:-1",shape=box]
+  tr3 -> st4;  st3 [label="3",shape=circle,color=black];
+/* searchAdvanced(5, Thd0:java/util/Random.java:-1, true) */
+  st4 -> tr4;
+  tr4 [label="Thd0:java/util/Random.java:-1",shape=box]
+  tr4 -> st5;  st4 [label="4",shape=circle,color=black];
+/* searchAdvanced(6, Thd0:java/util/Random.java:-1, true) */
+  st5 -> tr5;
+  tr5 [label="Thd0:java/util/Random.java:-1",shape=box]
+  tr5 -> st6;  st5 [label="5",shape=circle,color=black];
+/* searchAdvanced(5, Thd0:java/util/Random.java:-1, true) */
+  st6 -> tr6;
+  tr6 [label="Thd0:java/util/Random.java:-1",shape=box]
+  tr6 -> st5;  st6 [label="6",shape=circle,color=black];
+/* searchBacktracked(gov.nasa.jpf.listener.StateSpaceDot$StateInformation@4eb7f003) */
+/* searchAdvanced(7, Thd0:java/util/Random.java:-1, true) */
+  st6 -> tr7;
+  tr7 [label="Thd0:java/util/Random.java:-1",shape=box]
+  tr7 -> st7;/* propertyViolated(7) */
+  st7 [label="7:gov.nasa.jpf.listener.NoStateCycles (Finds cycles in states.  A cycle suggests that the program might be able to hang.)",shape=diamond,color=red];
+}

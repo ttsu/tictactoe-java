@@ -49,7 +49,7 @@ public class TicTacToeGameRunner {
    * Runs the TicTacToe game, alternating between human and computer moves until the game is over.
    */
   public void run() {
-    printInstructions();
+    //printInstructions();
     while (!game.isOver()) {
       moveHuman();
       moveComputer();
@@ -82,15 +82,15 @@ public class TicTacToeGameRunner {
     Random rng = new Random(); 
     while (true) {
       do {
-        printStream.print("Player X [row,col]: ");
-//        original code used scanner input for the players next move.
-//        Here, we replace with 2 random ints between [0,2], with a blank println
-//        to adjust for the formatting difference
+  //      printStream.print("Player X [row,col]: ");
+  //      original code used scanner input for the players next move.
+  //      Here, we replace with 2 random ints between [0,2], with a blank println
+  //      to adjust for the formatting difference
         
-//        String input = scanner.nextLine();
-        System.out.println("");
+  //      String input = scanner.nextLine();
         String input = String.format("%s,%s", rng.nextInt(3), rng.nextInt(3)) ;
-        userPosition = parseUserInput(input);
+        System.out.println(input);
+	userPosition = parseUserInput(input);
        
       } while (userPosition == null);
 
@@ -99,14 +99,14 @@ public class TicTacToeGameRunner {
           game.switchPlayer();
           return;
         } else {
-          printStream.printf("(%d,%d) has already been taken. ", userPosition.getRow(),
-              userPosition.getCol());
-          printInstructions();
+  //        printStream.printf("(%d,%d) has already been taken. ", userPosition.getRow(),
+  //        userPosition.getCol());
+  //        printInstructions();
         }
       } catch (IllegalArgumentException e) {
-        printStream.printf("(%d,%d) is not on the board. ", userPosition.getRow(),
-            userPosition.getCol());
-        printInstructions();
+  //        printStream.printf("(%d,%d) is not on the board. ", userPosition.getRow(),
+  //        userPosition.getCol());
+  //        printInstructions();
       }
     }
   }
