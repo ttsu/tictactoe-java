@@ -1,0 +1,49 @@
+JavaPathfinder core system v8.0 (rev 121f36476db0a420769058fa7ce56554cb6869c7) - (C) 2005-2014 United States Government. All rights reserved.
+
+
+====================================================== system under test
+ttsu.game.tictactoe.TicTacToeMain.main()
+
+====================================================== search started: 4/16/22 3:02 AM
+advanced to 0: 2 2
+advanced to 1: 2 2
+advanced to 2: 0 1
+advanced to 3: 2 2
+advanced to 4: 2 2
+advanced to 5: 0 0
+advanced to 6: 0 0
+advanced to 5: 0 0
+backtracked to 6: 0 0
+advanced to 7: 2 2
+violated at 7: 2 2
+
+====================================================== error 1
+gov.nasa.jpf.listener.NoStateCycles ("Finds cycles in states.  A cycle suggests that the program might be able to hang.")
+States:
+  6
+  5
+
+
+====================================================== snapshot #1
+thread java.lang.Thread:{id:0,name:main,status:RUNNING,priority:5,isDaemon:false,lockCount:0,suspendCount:0}
+  call stack:
+	at java.util.Random.nextInt(Random.java)
+	at ttsu.game.tictactoe.TicTacToeGameRunner.moveHuman(TicTacToeGameRunner.java:91)
+	at ttsu.game.tictactoe.TicTacToeGameRunner.run(TicTacToeGameRunner.java:54)
+	at ttsu.game.tictactoe.TicTacToeMain.main(TicTacToeMain.java:22)
+
+
+====================================================== results
+error #1: gov.nasa.jpf.listener.NoStateCycles ("Finds cycles in states.  A cycle suggests that the program might be able to hang.") "States:   6   5 "
+
+====================================================== statistics
+elapsed time:       00:00:02
+states:             new=8,visited=1,backtracked=1,end=0
+search:             maxDepth=8,constraints=0
+choice generators:  thread=2 (signal=0,lock=1,sharedRef=0,threadApi=0,reschedule=1), data=6
+heap:               new=58405,released=56309,maxLive=4990,gcCycles=9
+instructions:       7772723
+max memory:         445MB
+loaded code:        classes=161,methods=3078
+
+====================================================== search finished: 4/16/22 3:02 AM

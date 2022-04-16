@@ -12,13 +12,18 @@ import gov.nasa.jpf.vm.FieldInfo;
 
 
 /**
+ * @author Digen Gill
+ *
+ * Listener which prints out the row and col values for each transition.
+ * Used for understanding how to fix the Cycles in the code
  *
  */
-public class MyListener extends ListenerAdapter implements JPFListener {
+public class CheckCycleListener extends ListenerAdapter implements JPFListener {
 
+	// keep track of values
 	long row, col;
 
-	public MyListener()
+	public CheckCycleListener()
 	{
 		this.row = 0;
 		this.col = 0;
@@ -27,6 +32,7 @@ public class MyListener extends ListenerAdapter implements JPFListener {
 
 	public void instructionExecuted(VM vm, ThreadInfo currentThread, Instruction nextInstruction, Instruction executedInstruction)
 	{
+		// update row and col if new value
 		if (executedInstruction instanceof FieldInstruction)
 		{
 		FieldInstruction ins = (FieldInstruction) executedInstruction;	
@@ -37,15 +43,24 @@ public class MyListener extends ListenerAdapter implements JPFListener {
 			long val = ins.getLastValue();
 			if (name.equals("row") && this.row != val)
 			{
-				System.out.println(name+ " "+ val);
+				this.row = val;
 			}
 			else if (name.equals("col") && this.col != val)
 			{
-				System.out.println(name+ " "+ val);
+				this.col = val;
 			}
 		}
 	}
+	}
 
+	public void stateAdvanced(Search s){
+		System.out.println("advanced to "+s.getStateId()+": "+this.row+ " "+ this.col);
+	}
+	public void stateBacktracked(Search s){
+		System.out.println("backtracked to "+s.getStateId()+": "+this.row+ " "+ this.col);
+	}
+	public void propertyViolated(Search s){
+		System.out.println("violated at "+s.getStateId()+": "+this.row+ " "+ this.col);
+	}
 
-}
 }
